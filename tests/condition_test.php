@@ -75,6 +75,34 @@ final class condition_test extends \advanced_testcase {
         $this->assertTrue($tree->check_available(false, $info, true, $user->id)->is_available());
     }
 
+    public function test_in_a_game_more_the_place_is_that_of_its_class(): void {
+        global $DB, $CFG;
+        $this->resetAfterTest();
+        $CFG->enableavailability = true;
+        $gen = $this->getDataGenerator();
+        $course = $gen->create_course();
+        $c = (int) $course->id;
+        regions::save($c, ['enabled' => 1]);
+        missions::install($c, 'livingthings', 'valley', 'es');
+        // 5th B plays apart, in a game more of the course, with its own mission.
+        $group = $gen->create_group(['courseid' => $c, 'name' => '5.º B']);
+        $user = $gen->create_and_enrol($course, 'student');
+        $gen->create_group_member(['groupid' => $group->id, 'userid' => $user->id]);
+        $key = \local_oksigeniatesape\local\games::create($c, (int) $group->id);
+        regions::save($key, ['enabled' => 1]);
+        $theirs = missions::install($key, 'livingthings', 'valley', 'es');
+        $page = $gen->create_module('page', ['course' => $c]);
+        $info = new \core_availability\info_module(get_fast_modinfo($course)->get_cm($page->cmid));
+        $code = condition::places($c)[1]['code'];
+        $place = new condition(condition::get_json(condition::PLACE, $code));
+        // The game of the course lights it: not theirs.
+        $DB->set_field('local_oksigeniatesape_chapter', 'litat', time(), ['missionid' => missions::get($c)->id, 'code' => $code]);
+        $this->assertFalse($place->is_available(false, $info, true, $user->id));
+        // Their class lights it.
+        $DB->set_field('local_oksigeniatesape_chapter', 'litat', time(), ['missionid' => $theirs->id, 'code' => $code]);
+        $this->assertTrue($place->is_available(false, $info, true, $user->id));
+    }
+
     public function test_a_wrong_structure_is_not_a_condition(): void {
         foreach ([(object) ['c' => 'place'], (object) ['c' => 'level', 'level' => 0], (object) ['c' => 'other']] as $bad) {
             try {

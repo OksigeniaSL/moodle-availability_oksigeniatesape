@@ -18,6 +18,7 @@ namespace availability_oksigeniatesape;
 
 use core_availability\info;
 use local_oksigeniatesape\local\characters;
+use local_oksigeniatesape\local\games;
 use local_oksigeniatesape\local\missions;
 
 /**
@@ -97,7 +98,8 @@ class condition extends \core_availability\condition {
      * @return bool
      */
     public function is_available($not, info $info, $grabthelot, $userid) {
-        $allow = $this->kind === self::PLACE ? self::lit((int) $info->get_course()->id, $this->place) :
+        // The place, in the game of the user in the course: the course, or the game more of their group.
+        $allow = $this->kind === self::PLACE ? self::lit(games::key((int) $info->get_course()->id, (int) $userid), $this->place) :
             self::level((int) $userid) >= $this->level;
         return $not ? !$allow : $allow;
     }
