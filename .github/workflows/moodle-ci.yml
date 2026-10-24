@@ -144,12 +144,20 @@ jobs:
 
       # The build of the YUI module must be exactly what shifter makes: when grunt finds it stale, what it built is
       # kept, to commit it.
+      - name: Gather the YUI build
+        if: failure()
+        run: |
+          mkdir -p yui-build
+          find -L moodle plugin -path '*/yui/build/moodle-availability_oksigeniatesape-form/*.js' \
+            -exec cp {} yui-build/ \; 2>/dev/null || true
+          ls -l yui-build
+
       - name: Keep the YUI build
         if: failure()
         uses: actions/upload-artifact@v4
         with:
           name: yui-build-${{ matrix.moodle-branch }}
-          path: moodle/**/availability/condition/oksigeniatesape/yui/build
+          path: yui-build
           if-no-files-found: ignore
 
       - name: phpunit
