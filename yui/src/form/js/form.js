@@ -4,6 +4,8 @@
  *
  * @module moodle-availability_oksigeniatesape-form
  */
+// The name Moodle gives to the module of a condition.
+// eslint-disable-next-line camelcase
 M.availability_oksigeniatesape = M.availability_oksigeniatesape || {};
 
 /**
