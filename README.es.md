@@ -13,7 +13,7 @@ juego está configurado. Como cualquier condición de Moodle, se puede negar y c
 
 ## Requisitos
 
-- Moodle 4.5 a 5.3.
+- Moodle 4.5 a 5.3; probado también en la rama de desarrollo de Moodle 6.0.
 - Oksigenia Tesapé (`local_oksigeniatesape`) 0.195.0 o posterior.
 
 ## Instalación

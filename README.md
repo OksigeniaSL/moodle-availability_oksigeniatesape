@@ -17,7 +17,7 @@ Like any condition of Moodle, it can be negated and combined with others.
 
 ## Requirements
 
-- Moodle 4.5 to 5.3.
+- Moodle 4.5 to 5.3; also tested on the development branch of Moodle 6.0.
 - Oksigenia Tesapé (`local_oksigeniatesape`) 0.195.0 or later.
 
 ## Installation
